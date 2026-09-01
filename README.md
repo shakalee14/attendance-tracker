@@ -247,31 +247,70 @@ A production system could provide staff with a list of unmatched participants fo
 
 # Running Locally
 
-## Install dependencies
+## Prerequisites
+
+Before running the application, make sure you have Python 3 installed.
+
+## 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd attendance-tracker
+```
+
+## 2. Create a virtual environment
+
+```bash
+python3 -m venv venv
+```
+
+## 3. Activate the virtual environment
+
+### macOS/Linux
+
+```bash
+source venv/bin/activate
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+After activation, your terminal should show `(venv)`.
+
+## 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Google Sheets credentials
+## 5. Configure Google Sheets credentials
 
 The application requires a Google service account with access to the Program Roster Google Sheet.
 
-For local development, the service account credentials can be provided through a local credentials file that is excluded from Git.
+For local development, place the Google service account credentials JSON file in the project root with the filename expected by `sheets.py`.
 
-For deployment, credentials are stored as an environment variable rather than committed to the repository.
+For security, this credentials file is excluded from Git and should never be committed to the repository.
 
-## Run the application
+The service account must also be given access to the Google Sheet.
+
+## 6. Run the application
 
 ```bash
 python app.py
 ```
 
-Then open:
+Then open the application in your browser:
 
 ```text
 http://127.0.0.1:5000
 ```
+
+## Deployment Credentials
+
+For the deployed application, Google service account credentials are provided through the `GOOGLE_SERVICE_ACCOUNT_JSON` environment variable rather than a credentials file.
 
 ---
 
@@ -311,4 +350,3 @@ If New Roots decided to move forward with a production attendance solution, I wo
    Pilot the solution with staff and refine the workflow based on their feedback.
 
 The prototype focuses on validating the core workflow first: reducing manual attendance processing while keeping the workflow understandable for non-technical staff.
-# attendance-tracker
