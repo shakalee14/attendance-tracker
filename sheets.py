@@ -1,52 +1,52 @@
+import os
+import json
+
 import gspread
 from google.oauth2.service_account import Credentials
 
 
 SPREADSHEET_ID = "1Co5SuHTMtNbQPTTPPrJr7fYcqI4090VpEgrbW_I-QsA"
 
-SERVICE_ACCOUNT_FILE = "white-library-507322-g2-32b748dfb397.json"
 
-
-def get_roster():
+def get_client():
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets"
     ]
 
-    credentials = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE,
-        scopes=scopes
+    service_account_json = os.environ.get(
+        "GOOGLE_SERVICE_ACCOUNT_JSON"
     )
 
-    client = gspread.authorize(credentials)
+    if service_account_json:
+        service_account_info = json.loads(
+            service_account_json
+        )
+
+        credentials = Credentials.from_service_account_info(
+            service_account_info,
+            scopes=scopes
+        )
+    else:
+        credentials = Credentials.from_service_account_file(
+            "white-library-507322-g2-32b748dfb397.json",
+            scopes=scopes
+        )
+
+    return gspread.authorize(credentials)
+
+
+def get_roster():
+    client = get_client()
 
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
 
     worksheet = spreadsheet.sheet1
 
-    records = worksheet.get_all_records()
+    return worksheet.get_all_records()
 
-    return records
-
-
-if __name__ == "__main__":
-    roster = get_roster()
-
-    print(f"Found {len(roster)} roster records")
-
-    for person in roster:
-        print(person)
 
 def write_attendance_results(results, worksheet_name):
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets"
-    ]
-
-    credentials = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE,
-        scopes=scopes
-    )
-
-    client = gspread.authorize(credentials)
+    client = get_client()
 
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
 
@@ -69,14 +69,14 @@ def write_attendance_results(results, worksheet_name):
         "Attendance Status"
     ])
 
-    rows_to_write = []
-
-    for result in results:
-        rows_to_write.append([
+    rows_to_write = [
+        [
             result["name"],
             result["email"],
             result["status"]
-        ])
+        ]
+        for result in results
+    ]
 
     if rows_to_write:
         worksheet.append_rows(rows_to_write)
