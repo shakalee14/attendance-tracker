@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Attendance Tracker</h1>
+
+<h3>Instructions</h3>
+
+<p>
+  Upload a CSV of Zoom attendance to be added to the master attendance sheet.
+  Attendance sheets should include at least the following columns:
+  'Name (Original Name)', 'User Email', 'Join Time', and 'Duration (Minutes)'.
+</p>
+
+<p>
+  Attendees who attended less than 80 minutes will be marked as absent.
+</p>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+
+  <label for="attendance_file">Select attendance CSV:</label>
+  <input
+    type="file"
+    id="attendance_file"
+    name="attendance_file"
+    accept=".csv"
+    required
+  >
+
+  <br><br>
+
+  <label for="session_date">Session date:</label>
+  <input
+    type="date"
+    id="session_date"
+    name="session_date"
+    required
+  >
+
+  <br><br>
+
+  <button type="submit">Process Attendance</button>
+
+</form>
+
+</body>
+</html>

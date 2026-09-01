@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Results</title>
+</head>
+
+<body>
+    <h1>Attendance Updated</h1>
+    <a href="/">Process another attendance report</a>
+    <br/>
+    <a href="https://docs.google.com/spreadsheets/d/1Co5SuHTMtNbQPTTPPrJr7fYcqI4090VpEgrbW_I-QsA/edit?gid=0#gid=0" tab="_blank">Review Sheet</a>
+
+    <p>
+        Attendance for <strong>{{ session_date }}</strong>
+        was successfully processed and added to:
+        <strong>{{ worksheet_name }}</strong>.
+    </p>
+
+    <h2>Summary</h2>
+
+    <ul>
+        <li>Total Fellows: {{ results|length }}</li>
+        <li>Present: {{ present_count }}</li>
+        <li>Absent: {{ absent_count }}</li>
+    </ul>
+
+    <h2>Attendance Results</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Fellow Name</th>
+                <th>Email</th>
+                <th>Attendance Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result["name"] }}</td>
+                <td>{{ result["email"] }}</td>
+                <td>{{ result["status"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+</body>
+</html>
