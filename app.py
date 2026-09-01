@@ -18,6 +18,10 @@ app = Flask(__name__)
 def hello_world():
     return render_template("index.html")
 
+@app.route("/faq")
+def render_faq():
+    return render_template("faq.html")
+
 
 @app.route("/upload", methods=["POST"])
 def handle_submit():

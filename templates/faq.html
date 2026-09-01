@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FAQ - Attendance Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h1 {
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Frequently Asked Questions</h1>
+
+    <h3>My attendance CSV will not upload. What should I do?</h3>
+    <p>
+        Make sure you are uploading a CSV file downloaded from Zoom. The file
+        should include Name (Original Name), User Email, Join Time, and
+        Duration (Minutes) columns.
+    </p>
+
+    <h3>What session date should I select?</h3>
+    <p>
+        Select the date of the Zoom session you want to record attendance for.
+        The app will only use attendance records from that date.
+    </p>
+
+    <h3>How is attendance calculated?</h3>
+    <p>
+        Attendance is calculated using the total Duration (Minutes) recorded
+        for each Fellow. Fellows who attended for at least 80 minutes are
+        marked Present. Fellows who attended for less than 80 minutes are
+        marked Absent.
+    </p>
+
+    <h3>What happens if someone joins Zoom more than once?</h3>
+    <p>
+        The app adds together their attendance duration from multiple Zoom
+        sessions on the selected date.
+    </p>
+
+    <h3>Where are the results saved?</h3>
+    <p>
+        Results are added to the Program Roster Google Sheet in a new
+        attendance tab for the selected session date.
+    </p>
+
+    <h3>What if a Fellow does not appear in the Zoom attendance report?</h3>
+    <p>
+        The Fellow will be marked Absent for that session.
+    </p>
+
+    <br>
+
+    <a href="/">← Back to Attendance Tracker</a>
+
+</body>
+
+</html>
