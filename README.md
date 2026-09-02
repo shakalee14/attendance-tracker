@@ -4,7 +4,68 @@ A small web application that helps program staff automatically record Fellow att
 
 Live URL: https://attendance-tracker-79b5.onrender.com/
 
-## Overview
+## How to Use the Attendance Tracker
+
+#### 1. Download the Zoom attendance report
+
+After a Zoom session, download the attendance report as a CSV file. For more on how to get the attendance sheet, visit [zoom instructions here.](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0073594)
+
+The application expects the attendance sheet to include the following columns:
+
+* `Name (Original Name)`
+* `User Email`
+* `Join Time`
+* `Duration (Minutes)`
+
+#### 2. Open the Attendance Tracker
+
+Open the Attendance Tracker in your web browser.
+
+#### 3. Upload the CSV
+
+Click **Select attendance CSV** and choose the Zoom attendance CSV file.
+
+#### 4. Select the session date
+
+Choose the date of the Zoom session you want to process.
+
+The application will only use attendance records from the selected date.
+
+#### 5. Record attendance
+
+Click **Record Attendance**.
+
+The application will process the attendance report and update the Program Roster Google Sheet.
+
+#### 6. Review the results
+
+After processing, you should be able to view the results with the following:
+
+* The session date
+* The total number of Fellows processed
+* The number marked Present
+* The number marked Absent
+* Individual attendance results
+
+The same results are also written to an attendance tab in the Google Sheet.
+
+
+#### Attendance Policy
+
+It's assumed that session attendees need to attend most of the session to receive credit. This app marks someone absent who misses more than 10 minutes.
+
+For example, a fellow is therefore marked:
+
+* **Present:** attended for 80 minutes or more
+* **Absent:** attended for less than 80 minutes
+
+If a Fellow appears in multiple Zoom attendance records on the selected date, their attendance durations are added together.
+
+For more info on how this app was made, including in depth technical explanations, review the summaries below.
+
+---
+
+## Requirements Overview
 
 Program staff upload a Zoom attendance CSV through the browser and select the date of the session they want to process.
 
@@ -18,73 +79,7 @@ The application:
 6. Marks each Fellow as **Present** or **Absent**.
 7. Writes the results to a new or existing attendance tab in the Google Sheet.
 
-The application is designed for non-technical program staff.
-
----
-
-# How to Use the Attendance Tracker
-
-## 1. Download the Zoom attendance report
-
-After a Zoom session, download the attendance report as a CSV file.
-
-The application expects the CSV to include the following columns:
-
-* `Name (Original Name)`
-* `User Email`
-* `Join Time`
-* `Duration (Minutes)`
-
-## 2. Open the Attendance Tracker
-
-Open the Attendance Tracker in your web browser.
-
-## 3. Upload the CSV
-
-Click **Select attendance CSV** and choose the Zoom attendance CSV file.
-
-## 4. Select the session date
-
-Choose the date of the Zoom session you want to process.
-
-The application will only use attendance records from the selected date.
-
-## 5. Record attendance
-
-Click **Record Attendance**.
-
-The application will process the attendance report and update the Program Roster Google Sheet.
-
-## 6. Review the results
-
-After processing, the application displays:
-
-* The session date
-* The total number of Fellows processed
-* The number marked Present
-* The number marked Absent
-* Individual attendance results
-
-The same results are also written to an attendance tab in the Google Sheet.
-
----
-
-# Attendance Policy
-
-The session in this assessment runs from **5:00 PM to 6:30 PM**, for a total of 90 minutes.
-
-According to the program policy, a Fellow who misses more than 10 minutes is marked absent.
-
-For this prototype, a Fellow is therefore marked:
-
-* **Present:** attended for 80 minutes or more
-* **Absent:** attended for less than 80 minutes
-
-If a Fellow appears in multiple Zoom attendance records on the selected date, their attendance durations are added together.
-
----
-
-# System Architecture
+## System Architecture
 
 The application uses a simple architecture designed for the scope of this prototype.
 
@@ -125,27 +120,23 @@ The application is deployed as a small web service.
 
 # Decisions and Edge Cases
 
-The assessment instructions intentionally leave some details unspecified. The following decisions were made for this prototype.
+The assessment instructions intentionally leave some details unspecified. I made the following decisions for this prototype hoping it would make a better user experience and add some flexibility.
 
 ## Multiple dates in the Zoom CSV
 
 ### What I noticed
 
-The sample Zoom attendance data contained records from more than one date.
+The sample Zoom attendance data contained records from more than one date, for example August 19th and August 26 sessions.
 
 ### Decision
 
-Rather than assuming that the first date in the CSV is the correct session, the application asks the staff member to select the session date.
+Rather than assuming that the first date in the CSV is the correct session, the application asks the staff member to select the session date. This gives staff some flexibility but is also a feature that can easily be removed. This also assumes this application can be used for future dates.
 
 The application only processes Zoom records with a `Join Time` matching the selected date.
 
-### Why
-
-This gives staff control over which session is being processed and avoids making assumptions based on the order of records in the CSV.
-
 ---
 
-## Multiple Zoom records for the same Fellow
+## Multiple Zoom records for the same Fellow (data cleaning)
 
 ### What I noticed
 
@@ -161,7 +152,7 @@ A Fellow who temporarily leaves and rejoins the session should receive credit fo
 
 ---
 
-## Email capitalization
+## Email capitalization (more data cleaning)
 
 ### What I noticed
 
@@ -185,7 +176,7 @@ The Fellow is included in the final attendance results and marked **Absent**.
 
 ### Why
 
-The roster represents the people expected to attend the session.
+The roster represents the people expected to attend the session. This assumption can easily be fixed once we confirm with program staff if this is the right call for these fellows.
 
 ---
 
@@ -199,7 +190,7 @@ The participant is not added to the final attendance results.
 
 The attendance sheet is intended to record attendance for Fellows in the official program roster.
 
-In a production implementation, this could also be surfaced as an exception for staff review.
+In a production implementation, this could also be surfaced as an exception for staff review. Exceptions can be separately flagged and probably color coded via the google api.
 
 ---
 
@@ -211,7 +202,7 @@ If an attendance tab already exists for the selected session date, the applicati
 
 ### Why
 
-This makes it possible to correct an upload or rerun the attendance process without creating duplicate attendance tabs.
+This makes it possible to correct an upload or rerun the attendance process without creating duplicate attendance tabs. Of course the other option would be to flag and disable someone from uploading a date twice - I don't believe we would want to simply just add more records to it.
 
 ---
 
@@ -228,8 +219,6 @@ A production implementation should confirm whether this field always reflects th
 ### Session identification
 
 This prototype uses a staff-selected calendar date to identify the session.
-
-A production system may instead use a specific Zoom meeting ID, session ID, or scheduled program session record.
 
 ### Roster eligibility
 
@@ -316,7 +305,7 @@ For the deployed application, Google service account credentials are provided th
 
 # AI and Outside Resources
 
-AI tools were used during development as a resource for assistance with implementation and debugging.
+AI tools were used during development as a resource for assistance with implementation and debugging. The initial plan was reviewed, and edge cases were examined, including debugging help to use Render, the free platform used to deploy the application.
 
 The final solution was reviewed and tested independently. Implementation decisions—including how to handle multiple attendance dates, repeated Zoom attendance records, email normalization, and roster matching—were evaluated based on the requirements and behavior of the sample data.
 
@@ -338,15 +327,6 @@ If New Roots decided to move forward with a production attendance solution, I wo
    Determine whether sessions should be identified by Zoom meeting IDs, a program database, or another system.
 
 4. **Improve exception handling and staff review workflows.**
-   Surface unmatched participants, invalid records, and ambiguous attendance situations rather than silently processing them.
-
-5. **Add authentication and access controls.**
-   A production application should restrict access to authorized staff.
-
-6. **Add monitoring and audit history.**
-   Record uploads, processing results, errors, and changes so attendance records can be reviewed and traced.
-
-7. **Test with real program workflows before full rollout.**
-   Pilot the solution with staff and refine the workflow based on their feedback.
+   Surface unmatched participants, invalid records, and ambiguous attendance situations rather than silently processing them. For bigger lists this is especially important, but this of course depends on the size of meetings list to process.
 
 The prototype focuses on validating the core workflow first: reducing manual attendance processing while keeping the workflow understandable for non-technical staff.
